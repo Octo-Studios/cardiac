@@ -53,7 +53,7 @@ public class LifeOrb extends Entity {
 
         if (this.tickCount >= 20 && this.getLife() < MAX_LIFE) {
             for (LifeOrb orb : this.level().getEntitiesOfClass(LifeOrb.class, this.getBoundingBox().inflate(0.25F))) {
-                if (orb.getUUID().equals(this.getUUID()) || orb.isRemoved())
+                if (orb.getUUID().equals(this.getUUID()) || orb.isRemoved() || orb.getLife() >= MAX_LIFE)
                     continue;
 
                 float diff = MAX_LIFE - this.getLife();
