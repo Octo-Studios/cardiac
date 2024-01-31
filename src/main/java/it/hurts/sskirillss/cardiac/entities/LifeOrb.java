@@ -9,9 +9,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -35,6 +34,10 @@ public class LifeOrb extends Entity {
         this.getEntityData().set(LIFE, life);
     }
 
+    public int getStage() {
+        return getLife() <= 1 ? 1 : (int) Mth.clamp(getLife() / (LifeOrb.MAX_LIFE / 4F), 2, 5);
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -49,7 +52,7 @@ public class LifeOrb extends Entity {
             this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getZ());
 
         if (this.tickCount >= 20 && this.getLife() < MAX_LIFE) {
-            for (LifeOrb orb : this.level().getEntitiesOfClass(LifeOrb.class, this.getBoundingBox())) {
+            for (LifeOrb orb : this.level().getEntitiesOfClass(LifeOrb.class, this.getBoundingBox().inflate(0.25F))) {
                 if (orb.getUUID().equals(this.getUUID()) || orb.isRemoved())
                     continue;
 
@@ -135,7 +138,6 @@ public class LifeOrb extends Entity {
         entityData.define(LIFE, 1F);
     }
 
-
     @Override
     protected BlockPos getBlockPosBelowThatAffectsMyMovement() {
         return this.getOnPos(0.999F);
@@ -164,5 +166,20 @@ public class LifeOrb extends Entity {
     @Override
     public boolean isPushedByFluid(FluidType type) {
         return false;
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
+        if (LIFE.equals(pKey))
+            this.refreshDimensions();
+
+        super.onSyncedDataUpdated(pKey);
+    }
+
+    @Override
+    public EntityDimensions getDimensions(Pose pPose) {
+        float scale = 0.075F + (getStage() * 0.035F);
+
+        return EntityDimensions.scalable(scale, scale);
     }
 }

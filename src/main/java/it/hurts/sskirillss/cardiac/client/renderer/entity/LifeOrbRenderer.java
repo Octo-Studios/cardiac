@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import it.hurts.sskirillss.cardiac.Cardiac;
 import it.hurts.sskirillss.cardiac.entities.LifeOrb;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -12,8 +14,10 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Matrix3f;
@@ -24,7 +28,7 @@ public class LifeOrbRenderer extends EntityRenderer<LifeOrb> {
     public LifeOrbRenderer(EntityRendererProvider.Context context) {
         super(context);
 
-        this.shadowRadius = 0.15F;
+        this.shadowRadius = 0F;
         this.shadowStrength = 0.75F;
     }
 
@@ -35,6 +39,8 @@ public class LifeOrbRenderer extends EntityRenderer<LifeOrb> {
 
     @Override
     public void render(LifeOrb entity, float yaw, float pitch, PoseStack poseStack, MultiBufferSource buffer, int light) {
+        this.shadowRadius = 0.035F + (entity.getStage() * 0.025F);
+
         poseStack.pushPose();
 
         VertexConsumer consumer = buffer.getBuffer(RenderType.itemEntityTranslucentCull(getTextureLocation(entity)));
@@ -47,7 +53,7 @@ public class LifeOrbRenderer extends EntityRenderer<LifeOrb> {
 
         poseStack.scale(scale, scale, scale);
 
-        poseStack.translate(0.0F, 0.35F, 0.0F);
+        poseStack.translate(0.0F, 0.1F + (entity.getStage() * 0.05F), 0.0F);
 
         poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
         poseStack.mulPose(Axis.YP.rotationDegrees(180F));
@@ -70,10 +76,6 @@ public class LifeOrbRenderer extends EntityRenderer<LifeOrb> {
 
     @Override
     public ResourceLocation getTextureLocation(LifeOrb entity) {
-        float life = entity.getLife();
-
-        int ordinal = life <= 1 ? 1 : (int) Mth.clamp(entity.getLife() / (LifeOrb.MAX_LIFE / 4F), 2, 5);
-
-        return new ResourceLocation(Cardiac.MODID, "textures/entity/life_orb_" + ordinal + ".png");
+        return new ResourceLocation(Cardiac.MODID, "textures/entity/life_orb_" + entity.getStage() + ".png");
     }
 }
