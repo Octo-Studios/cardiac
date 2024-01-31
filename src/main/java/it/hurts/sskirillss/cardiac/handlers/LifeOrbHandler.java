@@ -5,6 +5,8 @@ import it.hurts.sskirillss.cardiac.init.EntityRegistry;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -41,5 +43,10 @@ public class LifeOrbHandler {
 
             level.addFreshEntity(orb);
         }
+    }
+
+    @SubscribeEvent
+    public void onLootTableLoad(LootTableLoadEvent event) {
+        event.getTable().addPool(LootPool.lootPool().build());
     }
 }
