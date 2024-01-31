@@ -24,7 +24,7 @@ public class LifeBottleLootModifier extends LootModifier {
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         RandomSource random = context.getRandom();
 
-        if (context.getQueriedLootTableId().getPath().matches(".*chests.*") && random.nextFloat() <= 1F)
+        if (context.getQueriedLootTableId().getPath().matches(".*chests.*") && random.nextFloat() <= 0.25F)
             generatedLoot.add(new ItemStack(ItemRegistry.LIFE_BOTTLE.get(), 1 + random.nextInt(3)));
 
         return generatedLoot;

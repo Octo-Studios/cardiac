@@ -44,9 +44,4 @@ public class LifeOrbHandler {
             level.addFreshEntity(orb);
         }
     }
-
-    @SubscribeEvent
-    public void onLootTableLoad(LootTableLoadEvent event) {
-        event.getTable().addPool(LootPool.lootPool().build());
-    }
 }
