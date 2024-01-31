@@ -1,3 +1,5 @@
 {
-	"item.cardiac.life_bottle": "Пузырёк жизни"
+	"item.cardiac.life_bottle": "Пузырёк жизни",
+
+	"enchantment.cardiac.lifesteal": "Кража жизни"
 }

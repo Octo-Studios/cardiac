@@ -15,6 +15,7 @@ public class Cardiac {
 
         MinecraftForge.EVENT_BUS.register(this);
 
+        EnchantmentRegistry.register();
         EntityRegistry.register();
         SoundRegistry.register();
         CodecRegistry.register();

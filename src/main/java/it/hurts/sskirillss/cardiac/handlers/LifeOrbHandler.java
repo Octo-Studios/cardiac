@@ -1,12 +1,12 @@
 package it.hurts.sskirillss.cardiac.handlers;
 
 import it.hurts.sskirillss.cardiac.entities.LifeOrb;
+import it.hurts.sskirillss.cardiac.init.EnchantmentRegistry;
 import it.hurts.sskirillss.cardiac.init.EntityRegistry;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,12 +15,15 @@ import net.minecraftforge.fml.common.Mod;
 public class LifeOrbHandler {
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
+        if (!(event.getSource().getEntity() instanceof Player player))
+            return;
+
         LivingEntity target = event.getEntity();
         Level level = target.getCommandSenderWorld();
 
         RandomSource random = target.getRandom();
 
-        float percentage = 0.15F;
+        float percentage = 0.15F + (player.getMainHandItem().getEnchantmentLevel(EnchantmentRegistry.LIFESTEAL.get()) * 0.1F);
 
         float maxHealth = target.getMaxHealth();
         float toDrop = maxHealth * percentage;
