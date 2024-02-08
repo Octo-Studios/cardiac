@@ -81,17 +81,9 @@ public class LifeOrb extends Entity {
         });
 
         if (player != null) {
-            Vec3 vec = new Vec3(player.getX() - this.getX(), player.getY() + (double) player.getEyeHeight() / 2.0D - this.getY(), player.getZ() - this.getZ());
+            this.setDeltaMovement(this.getDeltaMovement().add(player.position().add(0F, player.getBbHeight() / 2F, 0F).subtract(this.position()).normalize().scale((maxDistance - this.position().distanceTo(player.position())) / (maxDistance * 8))));
 
-            double length = vec.lengthSqr();
-
-            if (length < 64D) {
-                double d1 = 1D - Math.sqrt(length) / maxDistance;
-
-                this.setDeltaMovement(this.getDeltaMovement().add(vec.normalize().scale(d1 * d1 * 0.1D)));
-            }
-
-            if (this.position().distanceTo(player.position()) <= 0.5F && player.getHealth() < player.getMaxHealth()) {
+            if (this.position().distanceTo(player.position()) <= player.getBbWidth() && player.getHealth() < player.getMaxHealth()) {
                 float diff = player.getMaxHealth() - player.getHealth();
 
                 if (this.getLife() > diff) {
