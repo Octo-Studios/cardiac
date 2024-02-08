@@ -2,11 +2,11 @@ package it.hurts.sskirillss.cardiac.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import it.hurts.sskirillss.cardiac.Cardiac;
 import it.hurts.sskirillss.cardiac.entities.LifeOrb;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -14,14 +14,10 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
 
 @OnlyIn(Dist.CLIENT)
 public class LifeOrbRenderer extends EntityRenderer<LifeOrb> {
@@ -56,7 +52,7 @@ public class LifeOrbRenderer extends EntityRenderer<LifeOrb> {
         poseStack.translate(0.0F, 0.1F + (entity.getStage() * 0.05F), 0.0F);
 
         poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-        poseStack.mulPose(Axis.YP.rotationDegrees(180F));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(180F));
 
         int alpha = (int) Math.min(255, 255 * (0.75F + Math.sin(entity.tickCount * 0.25F) * 0.1F));
 

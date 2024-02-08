@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class SoundRegistry {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, Cardiac.MODID);
 
-    public static final RegistryObject<SoundEvent> LIFE_ORB_PICKUP = SOUNDS.register("life_orb_pickup", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Cardiac.MODID, "life_orb_pickup")));
+    public static final RegistryObject<SoundEvent> LIFE_ORB_PICKUP = SOUNDS.register("life_orb_pickup", () -> new SoundEvent(new ResourceLocation(Cardiac.MODID, "life_orb_pickup")));
 
     public static void register() {
         SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());

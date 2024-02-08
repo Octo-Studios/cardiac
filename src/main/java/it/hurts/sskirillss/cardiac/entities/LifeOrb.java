@@ -5,7 +5,6 @@ import it.hurts.sskirillss.cardiac.init.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -14,7 +13,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.NetworkHooks;
 
@@ -50,11 +48,11 @@ public class LifeOrb extends Entity {
         if (!this.isNoGravity())
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
 
-        if (!this.level().noCollision(this.getBoundingBox()))
+        if (!this.level.noCollision(this.getBoundingBox()))
             this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getZ());
 
         if (this.tickCount >= 20 && this.getLife() < getMaxLife()) {
-            for (LifeOrb orb : this.level().getEntitiesOfClass(LifeOrb.class, this.getBoundingBox().inflate(0.25F))) {
+            for (LifeOrb orb : this.level.getEntitiesOfClass(LifeOrb.class, this.getBoundingBox().inflate(0.25F))) {
                 if (orb.getUUID().equals(this.getUUID()) || orb.isRemoved() || orb.getLife() >= getMaxLife())
                     continue;
 
@@ -74,7 +72,7 @@ public class LifeOrb extends Entity {
 
         double maxDistance = CardiacConfig.LIFE_ORB_FOLLOW_DISTANCE.get();
 
-        Player player = this.level().getNearestPlayer(this.getX(), this.getY(), this.getZ(), maxDistance, entity -> {
+        Player player = this.level.getNearestPlayer(this.getX(), this.getY(), this.getZ(), maxDistance, entity -> {
             Player entry = (Player) entity;
 
             return !entry.isSpectator() && entry.getHealth() < entry.getMaxHealth();
@@ -96,7 +94,7 @@ public class LifeOrb extends Entity {
                     this.discard();
                 }
 
-                this.level().playSound(null, this.blockPosition(), SoundRegistry.LIFE_ORB_PICKUP.get(), SoundSource.MASTER, 0.5F, 1.25F + this.level().getRandom().nextFloat() * 0.75F);
+                this.level.playSound(null, this.blockPosition(), SoundRegistry.LIFE_ORB_PICKUP.get(), SoundSource.MASTER, 0.5F, 1.25F + this.level.getRandom().nextFloat() * 0.75F);
             }
         }
 
@@ -104,15 +102,15 @@ public class LifeOrb extends Entity {
 
         float friction = 0.98F;
 
-        if (this.onGround()) {
+        if (this.isOnGround()) {
             BlockPos pos = getBlockPosBelowThatAffectsMyMovement();
 
-            friction = this.level().getBlockState(pos).getFriction(this.level(), pos, this) * 0.98F;
+            friction = this.level.getBlockState(pos).getFriction(this.level, pos, this) * 0.98F;
         }
 
         this.setDeltaMovement(this.getDeltaMovement().multiply(friction, 0.98D, friction));
 
-        if (this.onGround())
+        if (this.isOnGround())
             this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, -0.9D, 1.0D));
 
         if (this.tickCount >= CardiacConfig.LIFE_ORB_LIFETIME.get() * 20)
@@ -135,11 +133,6 @@ public class LifeOrb extends Entity {
     }
 
     @Override
-    protected BlockPos getBlockPosBelowThatAffectsMyMovement() {
-        return this.getOnPos(0.999F);
-    }
-
-    @Override
     protected Entity.MovementEmission getMovementEmission() {
         return Entity.MovementEmission.NONE;
     }
@@ -150,7 +143,7 @@ public class LifeOrb extends Entity {
     }
 
     @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
