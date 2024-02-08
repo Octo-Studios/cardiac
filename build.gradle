@@ -12,7 +12,6 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.neoforged.gradle' version '[6.0.13, 6.2)'
-    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 apply plugin: "io.freefair.lombok"
@@ -29,14 +28,6 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
-mixin {
-    add sourceSets.main, "cardiac.refmap.json"
-    config "cardiac.mixins.json"
-
-    debug.verbose = true
-    debug.export = true
-}
-
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
 
@@ -52,7 +43,6 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'forge.enabledGameTestNamespaces', mod_id
 
-            arg "-mixin.config=" + mod_id + ".mixins.json"
             mods {
                 "${mod_id}" {
                     source sourceSets.main
@@ -67,7 +57,6 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'forge.enabledGameTestNamespaces', mod_id
 
-            arg "-mixin.config=" + mod_id + ".mixins.json"
             mods {
                 "${mod_id}" {
                     source sourceSets.main
@@ -96,16 +85,7 @@ repositories {
 dependencies {
     minecraft "net.neoforged:forge:${minecraft_version}-${forge_version}"
 
-    if (System.getProperty("idea.sync.active") != "true") {
-        annotationProcessor "org.spongepowered:mixin:0.8.4:processor"
-    }
-
     implementation 'org.jetbrains:annotations:20.1.0'
-
-    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:15.2.0.27"))
-    compileOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:15.2.0.27"))
-
-    runtimeOnly(fg.deobf("mezz.jei:jei-${minecraft_version}-forge:15.2.0.27"))
 
     if (file("libs").isDirectory()) {
         file("libs").eachFile { file ->
@@ -147,7 +127,6 @@ processResources {
 jar {
     manifest {
         attributes([
-                "MixinConfigs"            : mod_id + ".mixins.json",
                 "Specification-Title"     : mod_id,
                 "Specification-Vendor"    : mod_authors,
                 "Specification-Version"   : "1",
