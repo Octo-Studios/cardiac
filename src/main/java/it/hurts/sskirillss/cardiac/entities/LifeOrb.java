@@ -1,5 +1,6 @@
 package it.hurts.sskirillss.cardiac.entities;
 
+import it.hurts.sskirillss.cardiac.config.CardiacConfig;
 import it.hurts.sskirillss.cardiac.init.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -18,12 +19,14 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.network.NetworkHooks;
 
 public class LifeOrb extends Entity {
-    public static final float MAX_LIFE = 10F;
-
     private static final EntityDataAccessor<Float> LIFE = SynchedEntityData.defineId(LifeOrb.class, EntityDataSerializers.FLOAT);
 
     public LifeOrb(EntityType<? extends LifeOrb> type, Level level) {
         super(type, level);
+    }
+
+    public float getMaxLife() {
+        return CardiacConfig.LIFE_ORB_MAX_HEALTH.get().floatValue();
     }
 
     public float getLife() {
@@ -35,15 +38,14 @@ public class LifeOrb extends Entity {
     }
 
     public int getStage() {
-        return getLife() <= 1 ? 1 : (int) Mth.clamp(getLife() / (LifeOrb.MAX_LIFE / 4F), 2, 5);
+        int stages = CardiacConfig.LIFE_ORB_MAX_STAGES.get();
+
+        return Mth.clamp(getLife() <= 1 ? 1 : (int) Math.ceil(Math.min((getLife() / (getMaxLife() / Math.max(1, stages - 1))) + 1, stages)), 1, stages);
     }
 
     @Override
     public void tick() {
         super.tick();
-
-        if (this.getLife() == 0F)
-            this.setLife(0.25F);
 
         if (!this.isNoGravity())
             this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
@@ -51,12 +53,12 @@ public class LifeOrb extends Entity {
         if (!this.level().noCollision(this.getBoundingBox()))
             this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getZ());
 
-        if (this.tickCount >= 20 && this.getLife() < MAX_LIFE) {
+        if (this.tickCount >= 20 && this.getLife() < getMaxLife()) {
             for (LifeOrb orb : this.level().getEntitiesOfClass(LifeOrb.class, this.getBoundingBox().inflate(0.25F))) {
-                if (orb.getUUID().equals(this.getUUID()) || orb.isRemoved() || orb.getLife() >= MAX_LIFE)
+                if (orb.getUUID().equals(this.getUUID()) || orb.isRemoved() || orb.getLife() >= getMaxLife())
                     continue;
 
-                float diff = MAX_LIFE - this.getLife();
+                float diff = getMaxLife() - this.getLife();
 
                 if (orb.getLife() < diff) {
                     this.setLife(this.getLife() + orb.getLife());
@@ -65,12 +67,14 @@ public class LifeOrb extends Entity {
                 } else {
                     orb.setLife(orb.getLife() - diff);
 
-                    this.setLife(MAX_LIFE);
+                    this.setLife(getMaxLife());
                 }
             }
         }
 
-        Player player = this.level().getNearestPlayer(this.getX(), this.getY(), this.getZ(), 8, entity -> {
+        double maxDistance = CardiacConfig.LIFE_ORB_FOLLOW_DISTANCE.get();
+
+        Player player = this.level().getNearestPlayer(this.getX(), this.getY(), this.getZ(), maxDistance, entity -> {
             Player entry = (Player) entity;
 
             return !entry.isSpectator() && entry.getHealth() < entry.getMaxHealth();
@@ -82,7 +86,7 @@ public class LifeOrb extends Entity {
             double length = vec.lengthSqr();
 
             if (length < 64D) {
-                double d1 = 1D - Math.sqrt(length) / 8D;
+                double d1 = 1D - Math.sqrt(length) / maxDistance;
 
                 this.setDeltaMovement(this.getDeltaMovement().add(vec.normalize().scale(d1 * d1 * 0.1D)));
             }
@@ -119,7 +123,7 @@ public class LifeOrb extends Entity {
         if (this.onGround())
             this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, -0.9D, 1.0D));
 
-        if (this.tickCount >= 60 * 20)
+        if (this.tickCount >= CardiacConfig.LIFE_ORB_LIFETIME.get() * 20)
             this.discard();
     }
 

@@ -1,5 +1,6 @@
 package it.hurts.sskirillss.cardiac.entities;
 
+import it.hurts.sskirillss.cardiac.config.CardiacConfig;
 import it.hurts.sskirillss.cardiac.init.EntityRegistry;
 import it.hurts.sskirillss.cardiac.init.ItemRegistry;
 import net.minecraft.network.protocol.Packet;
@@ -37,12 +38,12 @@ public class ThrownLifeBottle extends ThrowableItemProjectile {
         if (this.level() instanceof ServerLevel) {
             this.level().levelEvent(2002, this.blockPosition(), PotionUtils.getColor(Potions.HEALING));
 
-            int steps = 5 + random.nextInt(10);
+            int steps = CardiacConfig.LIFE_BOTTLE_MIN_ORBS_AMOUNT.get() + random.nextInt(CardiacConfig.LIFE_BOTTLE_MAX_ADDITIONAL_ORBS_AMOUNT.get());
 
             for (int i = 0; i < steps; i++) {
                 LifeOrb orb = new LifeOrb(EntityRegistry.LIFE_ORB.get(), this.level());
 
-                orb.setLife(random.nextFloat() * (10F / steps));
+                orb.setLife((float) (CardiacConfig.LIFE_BOTTLE_MIN_LIFE_RESTORE.get() + (random.nextFloat() * CardiacConfig.LIFE_BOTTLE_MAX_ADDITIONAL_LIFE_RESTORE.get())));
                 orb.setPos(Vec3.atCenterOf(this.blockPosition()));
                 orb.setDeltaMovement(
                         (-1 + 2 * random.nextFloat()) * 0.15F,

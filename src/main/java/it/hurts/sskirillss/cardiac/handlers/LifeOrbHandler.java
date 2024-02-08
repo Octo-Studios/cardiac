@@ -1,5 +1,6 @@
 package it.hurts.sskirillss.cardiac.handlers;
 
+import it.hurts.sskirillss.cardiac.config.CardiacConfig;
 import it.hurts.sskirillss.cardiac.entities.LifeOrb;
 import it.hurts.sskirillss.cardiac.init.EnchantmentRegistry;
 import it.hurts.sskirillss.cardiac.init.EntityRegistry;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 public class LifeOrbHandler {
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
-        if (!(event.getSource().getEntity() instanceof Player player))
+        if (CardiacConfig.SHOULD_BE_KILLED_BY_PLAYER.get() && !(event.getSource().getEntity() instanceof Player))
             return;
 
         LivingEntity target = event.getEntity();
@@ -23,7 +24,8 @@ public class LifeOrbHandler {
 
         RandomSource random = target.getRandom();
 
-        float percentage = 0.15F + (player.getMainHandItem().getEnchantmentLevel(EnchantmentRegistry.LIFESTEAL.get()) * 0.1F);
+        float percentage = (float) (CardiacConfig.GENERAL_PERCENTAGE.get() + (event.getSource().getEntity() instanceof Player player
+                ? player.getMainHandItem().getEnchantmentLevel(EnchantmentRegistry.LIFESTEAL.get()) * CardiacConfig.LIFESTEAL_PERCENTAGE.get() : 0F));
 
         float maxHealth = target.getMaxHealth();
         float toDrop = maxHealth * percentage;
@@ -31,7 +33,7 @@ public class LifeOrbHandler {
         if (toDrop == 0)
             return;
 
-        int steps = 2 + random.nextInt((int) Math.ceil(toDrop));
+        int steps = CardiacConfig.LIFE_ORBS_MIN_AMOUNT.get() + random.nextInt((int) Math.ceil(toDrop));
 
         for (int i = 0; i < steps; i++) {
             LifeOrb orb = new LifeOrb(EntityRegistry.LIFE_ORB.get(), level);
