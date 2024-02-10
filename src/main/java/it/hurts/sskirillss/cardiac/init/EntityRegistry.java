@@ -11,7 +11,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class EntityRegistry {
-    private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Cardiac.MODID);
+    private static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, Cardiac.MODID);
 
     public static final RegistryObject<EntityType<LifeOrb>> LIFE_ORB = ENTITIES.register("life_orb", () ->
             EntityType.Builder.of(LifeOrb::new, MobCategory.MISC)

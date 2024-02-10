@@ -23,7 +23,6 @@ public class Cardiac {
         EnchantmentRegistry.register();
         EntityRegistry.register();
         SoundRegistry.register();
-        CodecRegistry.register();
         ItemRegistry.register();
     }
 

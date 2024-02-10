@@ -4,13 +4,15 @@ import it.hurts.sskirillss.cardiac.config.CardiacConfig;
 import it.hurts.sskirillss.cardiac.entities.LifeOrb;
 import it.hurts.sskirillss.cardiac.init.EnchantmentRegistry;
 import it.hurts.sskirillss.cardiac.init.EntityRegistry;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.Random;
 
 @Mod.EventBusSubscriber
 public class LifeOrbHandler {
@@ -19,13 +21,13 @@ public class LifeOrbHandler {
         if (CardiacConfig.SHOULD_BE_KILLED_BY_PLAYER.get() && !(event.getSource().getEntity() instanceof Player))
             return;
 
-        LivingEntity target = event.getEntity();
+        LivingEntity target = event.getEntityLiving();
         Level level = target.getCommandSenderWorld();
 
-        RandomSource random = target.getRandom();
+        Random random = target.getRandom();
 
         float percentage = (float) (CardiacConfig.GENERAL_PERCENTAGE.get() + (event.getSource().getEntity() instanceof Player player
-                ? player.getMainHandItem().getEnchantmentLevel(EnchantmentRegistry.LIFESTEAL.get()) * CardiacConfig.LIFESTEAL_PERCENTAGE.get() : 0F));
+                ? EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.LIFESTEAL.get(), player.getMainHandItem()) * CardiacConfig.LIFESTEAL_PERCENTAGE.get() : 0F));
 
         float maxHealth = target.getMaxHealth();
         float toDrop = maxHealth * percentage;
