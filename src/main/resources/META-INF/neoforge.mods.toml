@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[47,)"
+loaderVersion = "[1,)"
 license = "All Rights Reserved"
 issueTrackerURL = "https://discord.gg/pHren9yxzW"
 
@@ -14,12 +14,12 @@ description = '''Pickable health orbs after mob death'''
 [[dependencies.${mod_id}]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.20.1,1.21)"
+versionRange = "[1.21, 1.22)"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.${mod_id}]]
-modId = "forge"
-mandatory = true
-versionRange = "[47,)"
+modId = "neoforge"
+type="required"
+versionRange = "[21.0.101-beta,)"
 ordering = "NONE"
 side = "BOTH"

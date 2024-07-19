@@ -2,8 +2,8 @@ package it.hurts.sskirillss.cardiac.enchantments;
 
 import it.hurts.sskirillss.cardiac.config.CardiacConfig;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class LifestealEnchantment extends Enchantment {
     public LifestealEnchantment() {

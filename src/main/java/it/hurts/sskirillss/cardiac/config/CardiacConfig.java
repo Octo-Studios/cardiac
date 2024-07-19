@@ -1,43 +1,43 @@
 package it.hurts.sskirillss.cardiac.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class CardiacConfig {
-    public static final ForgeConfigSpec GENERAL;
+    public static final ModConfigSpec GENERAL;
 
     static {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
         setupConfig(builder);
 
         GENERAL = builder.build();
     }
 
-    public static ForgeConfigSpec.BooleanValue SHOULD_BE_KILLED_BY_PLAYER;
+    public static ModConfigSpec.BooleanValue SHOULD_BE_KILLED_BY_PLAYER;
 
-    public static ForgeConfigSpec.DoubleValue GENERAL_PERCENTAGE;
-    public static ForgeConfigSpec.DoubleValue LIFESTEAL_PERCENTAGE;
+    public static ModConfigSpec.DoubleValue GENERAL_PERCENTAGE;
+    public static ModConfigSpec.DoubleValue LIFESTEAL_PERCENTAGE;
 
-    public static ForgeConfigSpec.IntValue LIFE_ORBS_MIN_AMOUNT;
+    public static ModConfigSpec.IntValue LIFE_ORBS_MIN_AMOUNT;
 
-    public static ForgeConfigSpec.IntValue MAX_LIFESTEAL_LEVEL;
+    public static ModConfigSpec.IntValue MAX_LIFESTEAL_LEVEL;
 
-    public static ForgeConfigSpec.DoubleValue LIFE_ORB_MAX_HEALTH;
-    public static ForgeConfigSpec.IntValue LIFE_ORB_LIFETIME;
-    public static ForgeConfigSpec.IntValue LIFE_ORB_MAX_STAGES;
-    public static ForgeConfigSpec.DoubleValue LIFE_ORB_FOLLOW_DISTANCE;
+    public static ModConfigSpec.DoubleValue LIFE_ORB_MAX_HEALTH;
+    public static ModConfigSpec.IntValue LIFE_ORB_LIFETIME;
+    public static ModConfigSpec.IntValue LIFE_ORB_MAX_STAGES;
+    public static ModConfigSpec.DoubleValue LIFE_ORB_FOLLOW_DISTANCE;
 
-    public static ForgeConfigSpec.IntValue LIFE_BOTTLE_MIN_ORBS_AMOUNT;
-    public static ForgeConfigSpec.IntValue LIFE_BOTTLE_MAX_ADDITIONAL_ORBS_AMOUNT;
+    public static ModConfigSpec.IntValue LIFE_BOTTLE_MIN_ORBS_AMOUNT;
+    public static ModConfigSpec.IntValue LIFE_BOTTLE_MAX_ADDITIONAL_ORBS_AMOUNT;
 
-    public static ForgeConfigSpec.DoubleValue LIFE_BOTTLE_MIN_LIFE_RESTORE;
-    public static ForgeConfigSpec.DoubleValue LIFE_BOTTLE_MAX_ADDITIONAL_LIFE_RESTORE;
+    public static ModConfigSpec.DoubleValue LIFE_BOTTLE_MIN_LIFE_RESTORE;
+    public static ModConfigSpec.DoubleValue LIFE_BOTTLE_MAX_ADDITIONAL_LIFE_RESTORE;
 
-    public static ForgeConfigSpec.BooleanValue LIFE_BOTTLE_GEN_ENABLED;
-    public static ForgeConfigSpec.DoubleValue LIFE_BOTTLE_GEN_CHANCE;
-    public static ForgeConfigSpec.IntValue LIFE_BOTTLE_GEN_MAX_AMOUNT;
+    public static ModConfigSpec.BooleanValue LIFE_BOTTLE_GEN_ENABLED;
+    public static ModConfigSpec.DoubleValue LIFE_BOTTLE_GEN_CHANCE;
+    public static ModConfigSpec.IntValue LIFE_BOTTLE_GEN_MAX_AMOUNT;
 
-    private static void setupConfig(ForgeConfigSpec.Builder builder) {
+    private static void setupConfig(ModConfigSpec.Builder builder) {
         builder.push("General");
 
         SHOULD_BE_KILLED_BY_PLAYER = builder

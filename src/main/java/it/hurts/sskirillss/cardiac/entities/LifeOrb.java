@@ -15,8 +15,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.fluids.FluidType;
 
 public class LifeOrb extends Entity {
     private static final EntityDataAccessor<Float> LIFE = SynchedEntityData.defineId(LifeOrb.class, EntityDataSerializers.FLOAT);

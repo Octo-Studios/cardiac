@@ -1,21 +1,15 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'io.freefair.gradle:lombok-plugin:6.6'
-    }
-}
-
 plugins {
+    id 'java-library'
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle' version '[6.0.13, 6.2)'
+    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id 'io.freefair.lombok' version '8.4'
 }
 
-apply plugin: "io.freefair.lombok"
-apply plugin: 'java'
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
 
 version = minecraft_version + "-" + mod_version
 group = mod_group_id
@@ -24,54 +18,36 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 minecraft {
-    mappings channel: mapping_channel, version: mapping_version
-
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    copyIdeResources = true
-
     runs {
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'forge.logging.console.level', 'debug'
+
+            modSource project.sourceSets.main
+        }
+
         client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', mod_id
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
+            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         }
 
         server {
-            workingDirectory project.file('run')
+            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
 
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', mod_id
-
-            mods {
-                "${mod_id}" {
-                    source sourceSets.main
-                }
-            }
+            programArgument '--nogui'
         }
     }
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
 repositories {
-    flatDir {
-        dirs 'libs'
-    }
     maven {
         name = "Blamejared maven"
         url = "https://maven.blamejared.com/"
@@ -83,43 +59,23 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.neoforged:forge:${minecraft_version}-${forge_version}"
+    implementation "net.neoforged:neoforge:${neoforge_version}"
 
     implementation 'org.jetbrains:annotations:20.1.0'
-
-    if (file("libs").isDirectory()) {
-        file("libs").eachFile { file ->
-            def splitPos = file.name.lastIndexOf("-")
-
-            if (file.name != "desktop.ini") {
-                println file.name
-
-                def modartifact = file.name.substring(0, splitPos)
-                def modversion = file.name.substring(splitPos + 1, file.name.length() - 4)
-                def modreference = "lib:$modartifact:$modversion"
-
-                dependencies {
-                    implementation fg.deobf(project.dependencies.create(modreference) {
-                        transitive = false
-                    })
-                }
-            }
-        }
-    } else file("libs").mkdir()
 }
 
-def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
-def replaceProperties = [
-        minecraft_version: minecraft_version, forge_version: forge_version,
-        mod_id           : mod_id, mod_name: mod_name, mod_version: mod_version,
-        mod_authors      : mod_authors
-]
-
-processResources {
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            forge_version          : neoforge_version,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_version            : mod_version,
+            mod_authors            : mod_authors
+    ]
     inputs.properties replaceProperties
-    replaceProperties.put 'project', project
 
-    filesMatching(resourceTargets) {
+    filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta']) {
         expand replaceProperties
     }
 }

@@ -1,24 +1,17 @@
 package it.hurts.sskirillss.cardiac;
 
-import it.hurts.sskirillss.cardiac.config.CardiacConfig;
 import it.hurts.sskirillss.cardiac.init.*;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 
 @Mod(Cardiac.MODID)
 public class Cardiac {
     public static final String MODID = "cardiac";
 
-    public Cardiac() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupCommon);
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CardiacConfig.GENERAL, MODID + ".toml");
-
-        MinecraftForge.EVENT_BUS.register(this);
+    public Cardiac(IEventBus bus, ModContainer container) {
+        bus.addListener(this::setupCommon);
 
         EnchantmentRegistry.register();
         EntityRegistry.register();
