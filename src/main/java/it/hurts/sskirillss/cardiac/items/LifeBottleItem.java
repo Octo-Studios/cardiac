@@ -2,18 +2,22 @@ package it.hurts.sskirillss.cardiac.items;
 
 import it.hurts.sskirillss.cardiac.entities.ThrownLifeBottle;
 import it.hurts.sskirillss.cardiac.init.EntityRegistry;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Position;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ProjectileItem;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 
-public class LifeBottleItem extends Item {
+public class LifeBottleItem extends Item implements ProjectileItem {
     public LifeBottleItem() {
         super(new Item.Properties().rarity(Rarity.UNCOMMON));
     }
@@ -46,5 +50,15 @@ public class LifeBottleItem extends Item {
     @Override
     public boolean isFoil(ItemStack stack) {
         return true;
+    }
+
+    @Override
+    public Projectile asProjectile(Level level, Position position, ItemStack itemStack, Direction direction) {
+        ThrownLifeBottle thrownLifeBottle = new ThrownLifeBottle(EntityRegistry.THROWN_LIFE_BOTTLE.get(), level);
+
+        thrownLifeBottle.setPos(position.x(), position.y(), position.z());
+        thrownLifeBottle.setItem(itemStack);
+
+        return thrownLifeBottle;
     }
 }

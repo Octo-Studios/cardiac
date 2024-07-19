@@ -20,8 +20,6 @@ public class CardiacConfig {
 
     public static ModConfigSpec.IntValue LIFE_ORBS_MIN_AMOUNT;
 
-    public static ModConfigSpec.IntValue MAX_LIFESTEAL_LEVEL;
-
     public static ModConfigSpec.DoubleValue LIFE_ORB_MAX_HEALTH;
     public static ModConfigSpec.IntValue LIFE_ORB_LIFETIME;
     public static ModConfigSpec.IntValue LIFE_ORB_MAX_STAGES;
@@ -54,10 +52,6 @@ public class CardiacConfig {
         LIFE_ORBS_MIN_AMOUNT = builder
                 .comment("Minimum number of life orbs dropped from slain entity. Does not affect the total amount of health they will collectively restore")
                 .defineInRange("minLifeOrbs", 2, 0, Integer.MAX_VALUE);
-
-        MAX_LIFESTEAL_LEVEL = builder
-                .comment("The maximum allowed level of Lifesteal enchantment")
-                .defineInRange("maxLifestealLevel", 2, 0, Integer.MAX_VALUE);
 
         LIFE_ORB_MAX_HEALTH = builder
                 .comment("Maximum amount of health carried by a life orb")

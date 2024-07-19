@@ -3,12 +3,11 @@ package it.hurts.sskirillss.cardiac.entities;
 import it.hurts.sskirillss.cardiac.config.CardiacConfig;
 import it.hurts.sskirillss.cardiac.init.EntityRegistry;
 import it.hurts.sskirillss.cardiac.init.ItemRegistry;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
@@ -25,8 +24,8 @@ public class ThrownLifeBottle extends ThrowableItemProjectile {
     }
 
     @Override
-    protected float getGravity() {
-        return 0.07F;
+    public double getDefaultGravity() {
+        return 0.07D;
     }
 
     @Override
@@ -34,7 +33,7 @@ public class ThrownLifeBottle extends ThrowableItemProjectile {
         super.onHit(result);
 
         if (this.level() instanceof ServerLevel) {
-            this.level().levelEvent(2002, this.blockPosition(), PotionUtils.getColor(Potions.HEALING));
+            this.level().levelEvent(2002, this.blockPosition(), PotionContents.getColor(Potions.HEALING));
 
             int steps = CardiacConfig.LIFE_BOTTLE_MIN_ORBS_AMOUNT.get() + random.nextInt(CardiacConfig.LIFE_BOTTLE_MAX_ADDITIONAL_ORBS_AMOUNT.get());
 

@@ -4,9 +4,12 @@ import it.hurts.sskirillss.cardiac.config.CardiacConfig;
 import it.hurts.sskirillss.cardiac.entities.LifeOrb;
 import it.hurts.sskirillss.cardiac.init.EnchantmentRegistry;
 import it.hurts.sskirillss.cardiac.init.EntityRegistry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -25,7 +28,7 @@ public class LifeOrbHandler {
         RandomSource random = target.getRandom();
 
         float percentage = (float) (CardiacConfig.GENERAL_PERCENTAGE.get() + (event.getSource().getEntity() instanceof Player player
-                ? player.getMainHandItem().getEnchantmentLevel(EnchantmentRegistry.LIFESTEAL.get()) * CardiacConfig.LIFESTEAL_PERCENTAGE.get() : 0F));
+                ? player.getMainHandItem().getEnchantmentLevel(level.holderLookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentRegistry.LIFESTEAL)) * CardiacConfig.LIFESTEAL_PERCENTAGE.get() : 0F));
 
         float maxHealth = target.getMaxHealth();
         float toDrop = maxHealth * percentage;

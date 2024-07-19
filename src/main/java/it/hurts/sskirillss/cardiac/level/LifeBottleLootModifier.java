@@ -1,9 +1,10 @@
 package it.hurts.sskirillss.cardiac.level;
 
-import com.mojang.serialization.Codec;
+import com.google.common.base.Suppliers;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.hurts.sskirillss.cardiac.config.CardiacConfig;
-import it.hurts.sskirillss.cardiac.init.CodecRegistry;
+import it.hurts.sskirillss.cardiac.init.LootCodecRegistry;
 import it.hurts.sskirillss.cardiac.init.ItemRegistry;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.util.RandomSource;
@@ -14,8 +15,10 @@ import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifier;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Supplier;
+
 public class LifeBottleLootModifier extends LootModifier {
-    public static final Codec<LifeBottleLootModifier> CODEC = RecordCodecBuilder.create(inst -> codecStart(inst).apply(inst, LifeBottleLootModifier::new));
+    public static final Supplier<MapCodec<LifeBottleLootModifier>> CODEC = Suppliers.memoize(() -> RecordCodecBuilder.mapCodec(inst -> codecStart(inst).apply(inst, LifeBottleLootModifier::new)));
 
     public LifeBottleLootModifier(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
@@ -35,7 +38,7 @@ public class LifeBottleLootModifier extends LootModifier {
     }
 
     @Override
-    public Codec<? extends IGlobalLootModifier> codec() {
-        return CodecRegistry.LIFE_BOTTLE.get();
+    public MapCodec<? extends IGlobalLootModifier> codec() {
+        return LootCodecRegistry.LIFE_BOTTLE.get();
     }
 }

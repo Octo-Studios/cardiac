@@ -129,12 +129,12 @@ public class LifeOrb extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        entityData.define(LIFE, 1F);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(LIFE, 1F);
     }
 
     @Override
-    protected BlockPos getBlockPosBelowThatAffectsMyMovement() {
+    public BlockPos getBlockPosBelowThatAffectsMyMovement() {
         return this.getOnPos(0.999F);
     }
 
@@ -146,11 +146,6 @@ public class LifeOrb extends Entity {
     @Override
     public boolean isAttackable() {
         return false;
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override

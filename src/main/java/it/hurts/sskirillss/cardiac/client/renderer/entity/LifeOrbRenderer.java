@@ -41,8 +41,6 @@ public class LifeOrbRenderer extends EntityRenderer<LifeOrb> {
         VertexConsumer consumer = buffer.getBuffer(RenderType.itemEntityTranslucentCull(getTextureLocation(entity)));
         PoseStack.Pose pose = poseStack.last();
 
-        Matrix4f matrix4f = pose.pose();
-
         float scale = (float) (0.4F + Math.sin(entity.tickCount * 0.1F) * 0.05F);
 
         poseStack.scale(scale, scale, scale);
@@ -50,22 +48,21 @@ public class LifeOrbRenderer extends EntityRenderer<LifeOrb> {
         poseStack.translate(0.0F, 0.1F + (entity.getStage() * 0.05F), 0.0F);
 
         poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-        poseStack.mulPose(Axis.YP.rotationDegrees(180F));
 
         int alpha = (int) Math.min(255, 255 * (0.75F + Math.sin(entity.tickCount * 0.25F) * 0.1F));
 
-        vertex(consumer, matrix4f, pose, -0.5F, -0.5F, alpha, 0, 1);
-        vertex(consumer, matrix4f, pose, 0.5F, -0.5F, alpha, 1, 1);
-        vertex(consumer, matrix4f, pose, 0.5F, 0.5F, alpha, 1, 0);
-        vertex(consumer, matrix4f, pose, -0.5F, 0.5F, alpha, 0, 0);
+        vertex(consumer, pose, -0.5F, -0.5F, alpha, 0, 1);
+        vertex(consumer, pose, 0.5F, -0.5F, alpha, 1, 1);
+        vertex(consumer, pose, 0.5F, 0.5F, alpha, 1, 0);
+        vertex(consumer, pose, -0.5F, 0.5F, alpha, 0, 0);
 
         poseStack.popPose();
 
         super.render(entity, yaw, pitch, poseStack, buffer, light);
     }
 
-    private static void vertex(VertexConsumer consumer, Matrix4f matrix4f, PoseStack.Pose pose, float x, float y, int alpha, float u, float v) {
-        consumer.addVertex(matrix4f, x, y, 0F).setColor(255, 255, 255, alpha).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY).setLight(LightTexture.FULL_BRIGHT).setNormal(pose, 0F, 1F, 0F);
+    private static void vertex(VertexConsumer consumer, PoseStack.Pose pose, float x, float y, int alpha, float u, float v) {
+        consumer.addVertex(pose, x, y, 0F).setColor(255, 255, 255, alpha).setUv(u, v).setOverlay(OverlayTexture.NO_OVERLAY).setLight(LightTexture.FULL_BRIGHT).setNormal(pose,0F, 1F, 0F);
     }
 
     @Override
