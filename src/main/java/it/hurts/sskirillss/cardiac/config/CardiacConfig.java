@@ -44,7 +44,7 @@ public class CardiacConfig {
 
         GENERAL_PERCENTAGE = builder
                 .comment("How much percent of the slain entity's maximum health will be placed in the life orbs")
-                .defineInRange("generalPercentage", 0.15D, 0D, Double.MAX_VALUE);
+                .defineInRange("generalPercentage", 0.075D, 0D, Double.MAX_VALUE);
         LIFESTEAL_PERCENTAGE = builder
                 .comment("How much additional percent of the slain entity's maximum health will be placed in the life orbs per each level of Lifesteal enchantment")
                 .defineInRange("lifestealPercentage", 0.1D, 0D, Double.MAX_VALUE);
