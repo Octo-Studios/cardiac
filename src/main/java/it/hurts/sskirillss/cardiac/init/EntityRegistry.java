@@ -16,12 +16,14 @@ public class EntityRegistry {
     public static final DeferredHolder<EntityType<?>, EntityType<LifeOrb>> LIFE_ORB = ENTITIES.register("life_orb", () ->
             EntityType.Builder.of(LifeOrb::new, MobCategory.MISC)
                     .sized(0.3F, 0.3F)
+                    .fireImmune()
                     .build("life_orb")
     );
 
     public static final DeferredHolder<EntityType<?>, EntityType<ThrownLifeBottle>> THROWN_LIFE_BOTTLE = ENTITIES.register("thrown_life_bottle", () ->
             EntityType.Builder.of(ThrownLifeBottle::new, MobCategory.MISC)
                     .sized(0.25F, 0.25F)
+                    .fireImmune()
                     .build("thrown_life_bottle")
     );
 
