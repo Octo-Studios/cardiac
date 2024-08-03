@@ -16,7 +16,7 @@
     "client": [
       "it.hurts.octostudios.${mod_id}.fabric.CardiacFabricClient"
     ]
-  }
+  },
   "depends": {
     "fabricloader": ">=0.16.0",
     "minecraft": "~1.21",
