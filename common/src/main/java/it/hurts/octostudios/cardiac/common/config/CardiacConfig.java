@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class CardiacConfig implements OctoConfig {
-    @Prop(comment = "Should life orbs drop when a mob is killed by a player, or whenever it dies")
+    @Prop(comment = "Should life orbs drop when a mob is killed only by a player, or should whenever it dies")
     private boolean shouldBeKilledByPlayer = true;
 
     @Prop(comment = "Should life orbs be attracted to the player even if their health is already full")
