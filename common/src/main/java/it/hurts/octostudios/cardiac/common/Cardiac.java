@@ -11,6 +11,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -22,6 +23,8 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
+import static it.hurts.octostudios.cardiac.common.init.ConfigRegistry.CONFIG;
+
 public class Cardiac {
     public static final String MODID = "cardiac";
 
@@ -31,12 +34,17 @@ public class Cardiac {
         ItemRegistry.registerCommon();
 
         EntityEvent.LIVING_DEATH.register((LivingEntity entity, DamageSource source) -> {
+            Entity killer = source.getEntity();
+
+            if (!(killer instanceof Player) && CONFIG.isShouldBeKilledByPlayer())
+                return EventResult.pass();
+
             Level level = entity.getCommandSenderWorld();
 
             RandomSource random = entity.getRandom();
 
-            float percentage = (float) (0.075D + (source.getEntity() instanceof Player player
-                    ? player.getMainHandItem().getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY).getLevel(level.holderLookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentRegistry.LIFESTEAL)) * 0.1D : 0F));
+            float percentage = (float) (CONFIG.getGeneralPercentage() + (killer instanceof LivingEntity livingEntity ? livingEntity.getMainHandItem().getOrDefault(DataComponents.ENCHANTMENTS,
+                    ItemEnchantments.EMPTY).getLevel(level.holderLookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentRegistry.LIFESTEAL)) * CONFIG.getLifestealPercentage() : 0F));
 
             float maxHealth = entity.getMaxHealth();
             float toDrop = maxHealth * percentage;
@@ -44,7 +52,7 @@ public class Cardiac {
             if (toDrop == 0)
                 return EventResult.pass();
 
-            int steps = 2 + random.nextInt((int) Math.ceil(toDrop));
+            int steps = CONFIG.getMinOrbsAmount() + random.nextInt((int) Math.ceil(toDrop));
 
             for (int i = 0; i < steps; i++) {
                 LifeOrb orb = new LifeOrb(EntityRegistry.LIFE_ORB.get(), level);
@@ -68,6 +76,9 @@ public class Cardiac {
                 context.addPool(LootPool.lootPool().add(LootItem.lootTableItem(ItemRegistry.LIFE_BOTTLE.get()).setWeight(5).when(LootItemRandomChanceCondition.randomChance(0.2F)).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 3)))));
         });
 
-        LifecycleEvent.SETUP.register(DispenserBehaviorRegistry::registerCommon);
+        LifecycleEvent.SETUP.register(() -> {
+            DispenserBehaviorRegistry.registerCommon();
+            ConfigRegistry.registerCommon();
+        });
     }
 }

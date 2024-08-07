@@ -12,6 +12,8 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
+import static it.hurts.octostudios.cardiac.common.init.ConfigRegistry.CONFIG;
+
 public class LifeOrb extends Entity {
     private static final EntityDataAccessor<Float> LIFE = SynchedEntityData.defineId(LifeOrb.class, EntityDataSerializers.FLOAT);
 
@@ -20,7 +22,7 @@ public class LifeOrb extends Entity {
     }
 
     public float getMaxLife() {
-        return 10F;
+        return (float) CONFIG.getMaxOrbHealth();
     }
 
     public float getLife() {
@@ -66,7 +68,7 @@ public class LifeOrb extends Entity {
             }
         }
 
-        double maxDistance = 8D;
+        double maxDistance = CONFIG.getOrbFollowDistance();
 
         Player player = this.level().getNearestPlayer(this.getX(), this.getY(), this.getZ(), maxDistance, entity -> {
             Player entry = (Player) entity;
@@ -109,7 +111,7 @@ public class LifeOrb extends Entity {
         if (this.onGround())
             this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, -0.9D, 1.0D));
 
-        if (this.tickCount >= 60 * 20)
+        if (this.tickCount >= CONFIG.getOrbLifetime() * 20)
             this.discard();
     }
 
