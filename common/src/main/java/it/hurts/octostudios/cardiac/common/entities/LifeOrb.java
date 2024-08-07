@@ -73,16 +73,16 @@ public class LifeOrb extends Entity {
         Player player = this.level().getNearestPlayer(this.getX(), this.getY(), this.getZ(), maxDistance, entity -> {
             Player entry = (Player) entity;
 
-            return !entry.isSpectator() && entry.getHealth() < entry.getMaxHealth();
+            return !entry.isSpectator() && (CONFIG.isAttractToFullHP() || entry.getHealth() < entry.getMaxHealth());
         });
 
         if (player != null) {
             this.setDeltaMovement(this.getDeltaMovement().add(player.position().add(0F, player.getBbHeight() / 2F, 0F).subtract(this.position()).normalize().scale((maxDistance - this.position().distanceTo(player.position())) / (maxDistance * 8))));
 
-            if (this.position().distanceTo(player.position()) <= player.getBbWidth() && player.getHealth() < player.getMaxHealth()) {
+            if (this.position().distanceTo(player.position()) <= player.getBbWidth() && (CONFIG.isAttractToFullHP() || player.getHealth() < player.getMaxHealth())) {
                 float diff = player.getMaxHealth() - player.getHealth();
 
-                if (this.getLife() > diff) {
+                if (this.getLife() > diff && !CONFIG.isAttractToFullHP()) {
                     this.setLife(this.getLife() - diff);
 
                     player.heal(diff);
