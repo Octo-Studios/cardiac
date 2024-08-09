@@ -11,10 +11,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "it.hurts.octostudios.${mod_id}.fabric.CardiacFabric"
+      "${mod_group}.fabric.CardiacFabric"
     ],
     "client": [
-      "it.hurts.octostudios.${mod_id}.fabric.CardiacFabricClient"
+      "${mod_group}.fabric.CardiacFabricClient"
     ]
   },
   "depends": {
