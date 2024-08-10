@@ -2,9 +2,9 @@ package it.hurts.octostudios.cardiac.common.config;
 
 import it.hurts.octostudios.octolib.modules.config.annotations.Prop;
 import it.hurts.octostudios.octolib.modules.config.impl.OctoConfig;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class CardiacConfig implements OctoConfig {
     @Prop(comment = "Should life orbs drop when a mob is killed only by a player, or should whenever it dies")
     private boolean shouldBeKilledByPlayer = true;
