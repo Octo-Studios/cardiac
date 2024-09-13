@@ -15,12 +15,12 @@ public class CardiacConfig implements OctoConfig {
     @Prop(comment = "Should life orbs be attracted to the player even if their health is already full")
     private boolean attractToFullHP = true;
 
-    @Prop(comment = "What percentage of the slain entity's maximum health will be contained in the life orbs")
+    @Prop(comment = "Defines pairs where the key is either a mob's ID or a regex for matching mob IDs, and the value is the percentage of the slain entity's maximum health that will be stored in the life orbs")
     private Map<String, Double> generalPercentages = new LinkedHashMap<>() {{
         put(".*", 0.15D);
     }};
 
-    @Prop(comment = "What additional percentage of the slain entity's maximum health will be added to the life orbs for each level of the Lifesteal enchantment")
+    @Prop(comment = "Defines pairs where the key is either a mob's ID or a regex for matching mob IDs, and the value is the extra percentage of the slain entity's maximum health added to the life orbs for each level of the Lifesteal enchantment")
     private Map<String, Double> lifestealPercentages = new LinkedHashMap<>() {{
         put(".*", 0.1D);
     }};
