@@ -4,6 +4,9 @@ import it.hurts.octostudios.octolib.modules.config.annotations.Prop;
 import it.hurts.octostudios.octolib.modules.config.impl.OctoConfig;
 import lombok.Data;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 @Data
 public class CardiacConfig implements OctoConfig {
     @Prop(comment = "Should life orbs drop when a mob is killed only by a player, or should whenever it dies")
@@ -13,10 +16,14 @@ public class CardiacConfig implements OctoConfig {
     private boolean attractToFullHP = true;
 
     @Prop(comment = "What percentage of the slain entity's maximum health will be contained in the life orbs")
-    private double generalPercentage = 0.15D;
+    private Map<String, Double> generalPercentages = new LinkedHashMap<>() {{
+        put(".*", 0.15D);
+    }};
 
     @Prop(comment = "What additional percentage of the slain entity's maximum health will be added to the life orbs for each level of the Lifesteal enchantment")
-    private double lifestealPercentage = 0.1D;
+    private Map<String, Double> lifestealPercentages = new LinkedHashMap<>() {{
+        put(".*", 0.1D);
+    }};
 
     @Prop(comment = "The minimum number of life orbs dropped from a slain entity. This does not affect the total amount of health they will collectively restore")
     private int minOrbsAmount = 2;
