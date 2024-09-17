@@ -50,30 +50,12 @@ subprojects {
     java {
         withSourcesJar()
 
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     tasks.withType(JavaCompile).configureEach {
-        it.options.release = 21
-    }
-
-    tasks.register('collectJars', Copy) {
-        subprojects {
-            def ignoredProjects = ['common'];
-
-            if (!ignoredProjects.contains(project.name)) {
-                def remapJar = project.tasks.named('remapJar')
-
-                dependsOn remapJar
-                from remapJar
-                into 'build/libs'
-            }
-        }
-    }
-
-    assemble {
-        dependsOn(collectJars)
+        it.options.release = 17
     }
 
     publishing {
