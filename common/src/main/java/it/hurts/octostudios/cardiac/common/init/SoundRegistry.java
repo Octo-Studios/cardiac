@@ -10,7 +10,7 @@ import net.minecraft.sounds.SoundEvent;
 public class SoundRegistry {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(Cardiac.MODID, Registries.SOUND_EVENT);
 
-    public static final RegistrySupplier<SoundEvent> LIFE_ORB_PICKUP = SOUNDS.register("life_orb_pickup", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(Cardiac.MODID, "life_orb_pickup")));
+    public static final RegistrySupplier<SoundEvent> LIFE_ORB_PICKUP = SOUNDS.register("life_orb_pickup", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(Cardiac.MODID, "life_orb_pickup")));
 
     public static void registerCommon() {
         SOUNDS.register();

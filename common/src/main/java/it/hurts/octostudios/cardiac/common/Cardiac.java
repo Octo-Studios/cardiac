@@ -6,22 +6,20 @@ import dev.architectury.event.events.common.LifecycleEvent;
 import dev.architectury.event.events.common.LootEvent;
 import it.hurts.octostudios.cardiac.common.entities.LifeOrb;
 import it.hurts.octostudios.cardiac.common.init.*;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.storage.loot.LootDataManager;
 import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
 import java.util.regex.PatternSyntaxException;
 
 import static it.hurts.octostudios.cardiac.common.init.ConfigRegistry.CONFIG;
@@ -30,6 +28,7 @@ public class Cardiac {
     public static final String MODID = "cardiac";
 
     public static void init() {
+        EnchantmentRegistry.registerCommon();
         EntityRegistry.registerCommon();
         SoundRegistry.registerCommon();
         ItemRegistry.registerCommon();
@@ -67,7 +66,7 @@ public class Cardiac {
             var lifestealPercentage = 0D;
 
             if (killer instanceof LivingEntity livingEntity) {
-                int enchantment = livingEntity.getMainHandItem().getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY).getLevel(level.holderLookup(Registries.ENCHANTMENT).getOrThrow(EnchantmentRegistry.LIFESTEAL));
+                int enchantment = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.LIFESTEAL.get(), livingEntity.getMainHandItem());
 
                 if (enchantment > 0) {
                     for (var entry : CONFIG.getLifestealPercentages().entrySet()) {
@@ -109,8 +108,8 @@ public class Cardiac {
             return EventResult.pass();
         });
 
-        LootEvent.MODIFY_LOOT_TABLE.register((ResourceKey<LootTable> key, LootEvent.LootTableModificationContext context, boolean builtin) -> {
-            if (key.location().getPath().matches(".*chests.*"))
+        LootEvent.MODIFY_LOOT_TABLE.register((@Nullable LootDataManager lootDataManager, ResourceLocation id, LootEvent.LootTableModificationContext context, boolean builtin) -> {
+            if (id.getPath().matches(".*chests.*"))
                 context.addPool(LootPool.lootPool().add(LootItem.lootTableItem(ItemRegistry.LIFE_BOTTLE.get()).setWeight(5).when(LootItemRandomChanceCondition.randomChance(0.2F)).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 3)))));
         });
 

@@ -126,8 +126,8 @@ public class LifeOrb extends Entity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(LIFE, 1F);
+    protected void defineSynchedData() {
+        entityData.define(LIFE, 1F);
     }
 
     @Override

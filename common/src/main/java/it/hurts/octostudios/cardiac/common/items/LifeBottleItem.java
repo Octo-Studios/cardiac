@@ -14,7 +14,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
-public class LifeBottleItem extends Item implements ProjectileItem {
+public class LifeBottleItem extends Item {
     public LifeBottleItem() {
         super(new Item.Properties().arch$tab(CreativeModeTabs.INGREDIENTS).rarity(Rarity.UNCOMMON));
     }
@@ -47,15 +47,5 @@ public class LifeBottleItem extends Item implements ProjectileItem {
     @Override
     public boolean isFoil(ItemStack stack) {
         return true;
-    }
-
-    @Override
-    public Projectile asProjectile(Level level, Position position, ItemStack itemStack, Direction direction) {
-        ThrownLifeBottle thrownLifeBottle = new ThrownLifeBottle(EntityRegistry.THROWN_LIFE_BOTTLE.get(), level);
-
-        thrownLifeBottle.setPos(position.x(), position.y(), position.z());
-        thrownLifeBottle.setItem(itemStack);
-
-        return thrownLifeBottle;
     }
 }
