@@ -4,5 +4,7 @@
   "enchantment.cardiac.lifesteal": "Drain de Vie",
 
   "entity.cardiac.life_orb": "Orbe de Vie",
-  "entity.cardiac.thrown_life_bottle": "Fiole de Vie"
+  "entity.cardiac.thrown_life_bottle": "Fiole de Vie",
+
+  "sound.cardiac.life_orb_pickup": "Orbe de Vie absorbée"
 }
