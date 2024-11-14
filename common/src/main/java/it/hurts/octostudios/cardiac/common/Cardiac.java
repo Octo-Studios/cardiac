@@ -52,9 +52,6 @@ public class Cardiac {
                 var pattern = entry.getKey();
                 var percentage = entry.getValue();
 
-                if (percentage == 0)
-                    continue;
-
                 try {
                     if (entityId.matches(pattern))
                         basePercentage = percentage;
@@ -73,9 +70,6 @@ public class Cardiac {
                     for (var entry : CONFIG.getLifestealPercentages().entrySet()) {
                         var pattern = entry.getKey();
                         var percentage = entry.getValue();
-
-                        if (percentage == 0)
-                            continue;
 
                         try {
                             if (entityId.matches(pattern))
