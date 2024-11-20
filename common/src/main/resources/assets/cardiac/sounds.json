@@ -1,6 +1,7 @@
 {
     "life_orb_pickup": {
         "category": "master",
+        "subtitle": "sound.cardiac.life_orb_pickup",
         "sounds": [ { "name": "cardiac:life_orb_pickup" } ]
     }
 }
