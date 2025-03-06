@@ -1,5 +1,10 @@
 {
 	"item.cardiac.life_bottle": "Life Bottle",
 
-	"enchantment.cardiac.lifesteal": "Lifesteal"
+	"enchantment.cardiac.lifesteal": "Lifesteal",
+
+	"entity.cardiac.life_orb": "Life Orb",
+	"entity.cardiac.thrown_life_bottle": "Life Bottle",
+
+	"sound.cardiac.life_orb_pickup": "Life Orb absorbed"
 }
