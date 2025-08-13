@@ -1,7 +1,7 @@
 package it.hurts.octostudios.cardiac.common.init;
 
 import it.hurts.octostudios.cardiac.common.config.CardiacConfig;
-import it.hurts.octostudios.octolib.modules.config.ConfigManager;
+import it.hurts.octostudios.octolib.module.config.ConfigManager;
 
 public class ConfigRegistry {
     public static CardiacConfig CONFIG = new CardiacConfig();
