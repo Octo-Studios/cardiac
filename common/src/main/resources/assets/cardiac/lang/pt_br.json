@@ -1,0 +1,10 @@
+{
+	"item.cardiac.life_bottle": "Frasco de Vida",
+
+	"enchantment.cardiac.lifesteal": "Roubo de Vida",
+
+	"entity.cardiac.life_orb": "Orbe de Vida",
+	"entity.cardiac.thrown_life_bottle": "Frasco de Vida",
+
+	"sound.cardiac.life_orb_pickup": "Orbe de Vida absorvido"
+}
