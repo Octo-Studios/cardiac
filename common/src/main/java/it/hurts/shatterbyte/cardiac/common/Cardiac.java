@@ -73,10 +73,10 @@ public class Cardiac {
 
                     try {
                         if (entityId.matches(pattern))
-                            lifestealPercentage = percentage;
+                            lifestealPercentage = percentage * enchantment;
                     } catch (PatternSyntaxException exception) {
                         if (entityId.equals(pattern))
-                            lifestealPercentage = percentage;
+                            lifestealPercentage = percentage * enchantment;
                     }
                 }
             }
