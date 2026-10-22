@@ -1,32 +1,28 @@
 {
   "schemaVersion": 1,
   "id": "${mod_id}",
-  "version": "${mod_version}",
+  "version": "${version}",
   "name": "${mod_name}",
-  "description": "${mod_description}",
+  "description": "${description}",
   "icon": "assets/${mod_id}/${mod_id}.png",
   "authors": [
-    "${mod_authors}"
+    "${mod_author}"
   ],
-  "license": "${mod_license}",
+  "license": "${license}",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "${mod_group}.fabric.CardiacFabric"
+      "${group}.fabric.CardiacFabric"
     ],
     "client": [
-      "${mod_group}.fabric.CardiacFabricClient"
+      "${group}.fabric.CardiacFabricClient"
     ]
   },
   "depends": {
-    "fabricloader": ">=0.15.11",
-    "minecraft": "~1.21",
-    "java": ">=21",
-    "architectury": ">=13.0.2",
-    "octolib": ">=0.6.0.2",
-    "fabric-api": "*"
-  },
-  "suggests": {
-    "another-mod": "*"
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": "*",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=${java_version}",
+    "shatterlib": "*"
   }
 }
