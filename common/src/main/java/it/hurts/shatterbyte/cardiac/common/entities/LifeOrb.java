@@ -121,11 +121,14 @@ public class LifeOrb extends Entity {
     @Override
     protected void readAdditionalSaveData(ValueInput input) {
         setLife(input.getFloatOr("life", 1F));
+
+        this.tickCount = input.getIntOr("age", 0);
     }
 
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         output.putFloat("life", getLife());
+        output.putInt("age", this.tickCount);
     }
 
     @Override
