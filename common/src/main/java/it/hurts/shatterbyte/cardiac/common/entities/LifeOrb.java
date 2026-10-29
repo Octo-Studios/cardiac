@@ -82,10 +82,10 @@ public class LifeOrb extends Entity {
         if (player != null) {
             this.setDeltaMovement(this.getDeltaMovement().add(player.position().add(0F, player.getBbHeight() / 2F, 0F).subtract(this.position()).normalize().scale((maxDistance - this.position().distanceTo(player.position())) / (maxDistance * 8))));
 
-            if (!this.level().isClientSide() && this.position().distanceTo(player.position()) <= player.getBbWidth() && (CONFIG.isAttractToFullHP() || player.getHealth() < player.getMaxHealth())) {
+            if (!this.level().isClientSide() && this.position().distanceTo(player.position()) <= player.getBbWidth() && player.getHealth() < player.getMaxHealth()) {
                 float diff = player.getMaxHealth() - player.getHealth();
 
-                if (this.getLife() > diff && !CONFIG.isAttractToFullHP()) {
+                if (this.getLife() > diff) {
                     this.setLife(this.getLife() - diff);
 
                     player.heal(diff);
