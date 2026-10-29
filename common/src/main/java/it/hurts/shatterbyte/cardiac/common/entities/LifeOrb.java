@@ -95,7 +95,7 @@ public class LifeOrb extends Entity {
                     this.discard();
                 }
 
-                this.level().playSound(null, this.blockPosition(), SoundRegistry.LIFE_ORB_PICKUP.get(), SoundSource.MASTER, 0.5F, 1.25F + this.level().getRandom().nextFloat() * 0.75F);
+                this.level().playSound(null, this.blockPosition(), SoundRegistry.LIFE_ORB_PICKUP.get(), SoundSource.PLAYERS, 0.5F, 1.25F + this.level().getRandom().nextFloat() * 0.75F);
             }
         }
 
