@@ -18,13 +18,19 @@ import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import static it.hurts.shatterbyte.cardiac.common.init.ConfigRegistry.CONFIG;
 
 public class Cardiac {
     public static final String MODID = "cardiac";
+
+    private static final Map<String, Optional<Pattern>> PATTERNS = new ConcurrentHashMap<>();
 
     public static void init() {
         ConfigRegistry.registerCommon();
@@ -44,22 +50,9 @@ public class Cardiac {
 
         var random = entity.getRandom();
 
-        var basePercentage = 0D;
-
         var entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
 
-        for (var entry : CONFIG.getGeneralPercentages().entrySet()) {
-            var pattern = entry.getKey();
-            var percentage = entry.getValue();
-
-            try {
-                if (entityId.matches(pattern))
-                    basePercentage = percentage;
-            } catch (PatternSyntaxException exception) {
-                if (entityId.equals(pattern))
-                    basePercentage = percentage;
-            }
-        }
+        var basePercentage = getPercentage(CONFIG.getGeneralPercentages(), entityId);
 
         var lifestealPercentage = 0D;
 
@@ -67,18 +60,7 @@ public class Cardiac {
             var enchantment = livingEntity.getMainHandItem().getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY).getLevel(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(EnchantmentRegistry.LIFESTEAL));
 
             if (enchantment > 0) {
-                for (var entry : CONFIG.getLifestealPercentages().entrySet()) {
-                    var pattern = entry.getKey();
-                    var percentage = entry.getValue();
-
-                    try {
-                        if (entityId.matches(pattern))
-                            lifestealPercentage = percentage * enchantment;
-                    } catch (PatternSyntaxException exception) {
-                        if (entityId.equals(pattern))
-                            lifestealPercentage = percentage * enchantment;
-                    }
-                }
+                lifestealPercentage = getPercentage(CONFIG.getLifestealPercentages(), entityId) * enchantment;
             }
         }
 
@@ -102,6 +84,26 @@ public class Cardiac {
 
             level.addFreshEntity(orb);
         }
+    }
+
+    private static double getPercentage(Map<String, Double> percentages, String entityId) {
+        var result = 0D;
+
+        for (var entry : percentages.entrySet()) {
+            var pattern = entry.getKey();
+            var compiled = PATTERNS.computeIfAbsent(pattern, key -> {
+                try {
+                    return Optional.of(Pattern.compile(key));
+                } catch (PatternSyntaxException exception) {
+                    return Optional.empty();
+                }
+            });
+
+            if (compiled.map(value -> value.matcher(entityId).matches()).orElseGet(() -> entityId.equals(pattern)))
+                result = entry.getValue();
+        }
+
+        return result;
     }
 
     public static void onModifyLootTable(ResourceKey<LootTable> key, Consumer<LootPool.Builder> consumer) {
