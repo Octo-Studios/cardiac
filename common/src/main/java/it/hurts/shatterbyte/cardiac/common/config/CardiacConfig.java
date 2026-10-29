@@ -29,6 +29,9 @@ public class CardiacConfig extends ShatterConfig {
     @Comment("The minimum number of life orbs dropped from a slain entity. This does not affect the total amount of health they will collectively restore")
     private int minOrbsAmount = 2;
 
+    @Comment("The maximum number of life orbs dropped from a single slain entity. The total amount of health they will collectively restore stays the same, so each orb simply carries more")
+    private int maxOrbsAmount = 20;
+
     @Comment("The maximum amount of health carried by a life orb")
     private double maxOrbHealth = 10D;
 
@@ -37,6 +40,17 @@ public class CardiacConfig extends ShatterConfig {
 
     @Comment("The maximum distance in blocks from which a life orb can be attracted to the nearest player")
     private int orbFollowDistance = 8;
+
+    @Comment("Defines pairs where the key is either a loot table's ID or a regex for matching loot table IDs, and the value is the chance for Life Bottles to be added to that loot table. Leave the list empty to disable Life Bottles in loot entirely")
+    private Map<String, Double> lifeBottleLootChances = new LinkedHashMap<>() {{
+        put(".*chests.*", 0.2D);
+    }};
+
+    @Comment("The minimum number of Life Bottles added to a matching loot table")
+    private int lifeBottleLootMinAmount = 1;
+
+    @Comment("The maximum number of Life Bottles added to a matching loot table")
+    private int lifeBottleLootMaxAmount = 3;
 
     @Override
     public String getName() {

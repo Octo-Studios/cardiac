@@ -52,7 +52,7 @@ public class Cardiac {
 
         var entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()).toString();
 
-        var basePercentage = getPercentage(CONFIG.getGeneralPercentages(), entityId);
+        var basePercentage = getValue(CONFIG.getGeneralPercentages(), entityId);
 
         var lifestealPercentage = 0D;
 
@@ -60,7 +60,7 @@ public class Cardiac {
             var enchantment = livingEntity.getMainHandItem().getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY).getLevel(level.registryAccess().lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(EnchantmentRegistry.LIFESTEAL));
 
             if (enchantment > 0) {
-                lifestealPercentage = getPercentage(CONFIG.getLifestealPercentages(), entityId) * enchantment;
+                lifestealPercentage = getValue(CONFIG.getLifestealPercentages(), entityId) * enchantment;
             }
         }
 
@@ -69,7 +69,7 @@ public class Cardiac {
         if (toDrop == 0)
             return;
 
-        var steps = CONFIG.getMinOrbsAmount() + random.nextInt((int) Math.ceil(toDrop));
+        var steps = Math.clamp(CONFIG.getMinOrbsAmount() + random.nextInt((int) Math.ceil(toDrop)), 1, Math.max(1, CONFIG.getMaxOrbsAmount()));
 
         for (var i = 0; i < steps; i++) {
             var orb = new LifeOrb(EntityRegistry.LIFE_ORB.get(), level);
@@ -86,28 +86,38 @@ public class Cardiac {
         }
     }
 
-    private static double getPercentage(Map<String, Double> percentages, String entityId) {
+    private static double getValue(Map<String, Double> percentages, String entityId) {
         var result = 0D;
 
         for (var entry : percentages.entrySet()) {
-            var pattern = entry.getKey();
-            var compiled = PATTERNS.computeIfAbsent(pattern, key -> {
-                try {
-                    return Optional.of(Pattern.compile(key));
-                } catch (PatternSyntaxException exception) {
-                    return Optional.empty();
-                }
-            });
-
-            if (compiled.map(value -> value.matcher(entityId).matches()).orElseGet(() -> entityId.equals(pattern)))
+            if (matches(entry.getKey(), entityId))
                 result = entry.getValue();
         }
 
         return result;
     }
 
+    private static boolean matches(String pattern, String value) {
+        var compiled = PATTERNS.computeIfAbsent(pattern, key -> {
+            try {
+                return Optional.of(Pattern.compile(key));
+            } catch (PatternSyntaxException exception) {
+                return Optional.empty();
+            }
+        });
+
+        return compiled.map(entry -> entry.matcher(value).matches()).orElseGet(() -> value.equals(pattern));
+    }
+
     public static void onModifyLootTable(ResourceKey<LootTable> key, Consumer<LootPool.Builder> consumer) {
-        if (key.identifier().getPath().matches(".*chests.*"))
-            consumer.accept(LootPool.lootPool().add(LootItem.lootTableItem(ItemRegistry.LIFE_BOTTLE.get()).setWeight(5).when(LootItemRandomChanceCondition.randomChance(0.2F)).apply(SetItemCountFunction.setCount(UniformGenerator.between(1, 3)))));
+        var chance = getValue(CONFIG.getLifeBottleLootChances(), key.identifier().toString());
+
+        if (chance <= 0)
+            return;
+
+        var min = CONFIG.getLifeBottleLootMinAmount();
+        var max = Math.max(min, CONFIG.getLifeBottleLootMaxAmount());
+
+        consumer.accept(LootPool.lootPool().add(LootItem.lootTableItem(ItemRegistry.LIFE_BOTTLE.get()).setWeight(5).when(LootItemRandomChanceCondition.randomChance((float) chance)).apply(SetItemCountFunction.setCount(UniformGenerator.between(min, max)))));
     }
 }
