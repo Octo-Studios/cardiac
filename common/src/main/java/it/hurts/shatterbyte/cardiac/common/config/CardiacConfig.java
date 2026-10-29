@@ -14,7 +14,7 @@ public class CardiacConfig extends ShatterConfig {
     private boolean shouldBeKilledByPlayer = true;
 
     @Comment("Should life orbs be attracted to the player even if their health is already full")
-    private boolean attractToFullHP = true;
+    private boolean attractToFullHP = false;
 
     @Comment("Defines pairs where the key is either a mob's ID or a regex for matching mob IDs, and the value is the percentage of the slain entity's maximum health that will be stored in the life orbs")
     private Map<String, Double> generalPercentages = new LinkedHashMap<>() {{
