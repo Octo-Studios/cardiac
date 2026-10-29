@@ -7,6 +7,7 @@ import it.hurts.shatterbyte.cardiac.common.init.SoundRegistry;
 import it.hurts.shatterbyte.cardiac.common.registry.DeferredRegistry;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -26,7 +27,7 @@ public final class CardiacNeoForge {
         modBus.addListener(CardiacNeoForge::onCommonSetup);
         modBus.addListener(CardiacNeoForge::onBuildCreativeModeTabContents);
 
-        NeoForge.EVENT_BUS.addListener(CardiacNeoForge::onLivingDeath);
+        NeoForge.EVENT_BUS.addListener(EventPriority.LOWEST, CardiacNeoForge::onLivingDeath);
         NeoForge.EVENT_BUS.addListener(CardiacNeoForge::onLootTableLoad);
 
         if (FMLEnvironment.getDist() == Dist.CLIENT)
