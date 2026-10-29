@@ -52,7 +52,7 @@ public class LifeOrb extends Entity {
         if (!this.level().noCollision(this.getBoundingBox()))
             this.moveTowardsClosestSpace(this.getX(), (this.getBoundingBox().minY + this.getBoundingBox().maxY) / 2.0D, this.getZ());
 
-        if (this.tickCount >= 20 && this.getLife() < getMaxLife()) {
+        if (!this.level().isClientSide() && this.tickCount >= 20 && this.getLife() < getMaxLife()) {
             for (LifeOrb orb : this.level().getEntitiesOfClass(LifeOrb.class, this.getBoundingBox().inflate(0.25F))) {
                 if (orb.getUUID().equals(this.getUUID()) || orb.isRemoved() || orb.getLife() >= getMaxLife())
                     continue;
@@ -82,7 +82,7 @@ public class LifeOrb extends Entity {
         if (player != null) {
             this.setDeltaMovement(this.getDeltaMovement().add(player.position().add(0F, player.getBbHeight() / 2F, 0F).subtract(this.position()).normalize().scale((maxDistance - this.position().distanceTo(player.position())) / (maxDistance * 8))));
 
-            if (this.position().distanceTo(player.position()) <= player.getBbWidth() && (CONFIG.isAttractToFullHP() || player.getHealth() < player.getMaxHealth())) {
+            if (!this.level().isClientSide() && this.position().distanceTo(player.position()) <= player.getBbWidth() && (CONFIG.isAttractToFullHP() || player.getHealth() < player.getMaxHealth())) {
                 float diff = player.getMaxHealth() - player.getHealth();
 
                 if (this.getLife() > diff && !CONFIG.isAttractToFullHP()) {
@@ -114,7 +114,7 @@ public class LifeOrb extends Entity {
         if (this.onGround())
             this.setDeltaMovement(this.getDeltaMovement().multiply(1.0D, -0.9D, 1.0D));
 
-        if (this.tickCount >= CONFIG.getOrbLifetime() * 20)
+        if (!this.level().isClientSide() && this.tickCount >= CONFIG.getOrbLifetime() * 20)
             this.discard();
     }
 
